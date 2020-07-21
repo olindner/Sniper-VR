@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -9,6 +8,7 @@ public class SniperScopeControl : MonoBehaviour
     public Transform scopeTransform;
     public GameObject xrRigGameObject;
     public GameObject scopeRenderingObject;
+
     private GameObject headsetCamera;
     private List<InputDevice> rightEyeDevice = new List<InputDevice>();
     void Start()
