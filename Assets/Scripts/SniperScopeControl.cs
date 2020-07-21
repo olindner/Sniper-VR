@@ -9,11 +9,15 @@ public class SniperScopeControl : MonoBehaviour
     public GameObject xrRigGameObject;
     public GameObject scopeRenderingObject;
 
+    private Transform sniperTransform;
     private GameObject headsetCamera;
     private List<InputDevice> rightEyeDevice = new List<InputDevice>();
+    private bool shouldBeScoped = false;
     void Start()
     {
         InputDevices.GetDevicesAtXRNode(XRNode.RightEye, rightEyeDevice);
+
+        sniperTransform = GetComponent<Transform>();
 
         XRRig xrScript = xrRigGameObject.GetComponent<XRRig>();
         headsetCamera = xrScript.cameraGameObject;
@@ -27,7 +31,8 @@ public class SniperScopeControl : MonoBehaviour
 
         if (rightEyeDevice[0].TryGetFeatureValue(CommonUsages.rightEyePosition, out rightEyePosition))
         {
-            bool shouldBeScoped = Vector3.SqrMagnitude(rightEyePosition - scopeTransform.position) < 0.01;
+            // Could be expensive calc sqrt every frame, may want to look back into trigger detection
+            shouldBeScoped = Vector3.SqrMagnitude(rightEyePosition - scopeTransform.position) < 0.01;
 
             if (shouldBeScoped && !scopeRenderingObject.activeSelf)
             {
@@ -41,6 +46,18 @@ public class SniperScopeControl : MonoBehaviour
                 scopeRenderingObject.SetActive(false);
                 xrRigGameObject.GetComponent<XRRig>().cameraGameObject = headsetCamera;
             }
+        }
+    }
+
+    void LateUpdate()
+    {
+        if (scopeRenderingObject.activeSelf && Mathf.Abs(sniperTransform.transform.eulerAngles.z) > 0.01)
+        {
+            sniperTransform.transform.eulerAngles = new Vector3(
+                sniperTransform.transform.eulerAngles.x,
+                sniperTransform.transform.eulerAngles.y,
+                0
+            );
         }
     }
 }
