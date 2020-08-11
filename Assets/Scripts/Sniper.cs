@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -16,7 +14,7 @@ public class Sniper : MonoBehaviour
     private AudioSource audioSource = null;
     private float sniperVolume = 0.7f;
     private bool reloading = false;
-    private float reloadingTime = 3f;
+    private float reloadingTime = 2f;
 
     void Awake()
     {
@@ -35,7 +33,7 @@ public class Sniper : MonoBehaviour
         {
             audioSource.PlayOneShot(sniperSound, sniperVolume);
 
-            GameObject instantiatedBullet = Instantiate(bullet, muzzleExit);
+            GameObject instantiatedBullet = Instantiate(bullet, transform.position + Vector3.forward*0.3f, transform.rotation);
             instantiatedBullet.GetComponent<Rigidbody>().velocity = transform.forward * speed;
 
             StartCoroutine(Reload());
